@@ -579,6 +579,9 @@ tmedia_session_jsep01.onGetUserMediaSuccess = function (o_stream, _This) {
             return;
         }
 
+     if(This.my_mutex){tsk_utils_log_warn("onGetUserMediaSuccess already executed!"); return;}
+     This.my_mutex=true;
+
         if (o_stream) {
             // HACK: patch for Firefox and others
             // https://groups.google.com/group/discuss-webrtc/browse_thread/thread/e30f0ffc267bce5f
@@ -612,7 +615,7 @@ tmedia_session_jsep01.onGetUserMediaSuccess = function (o_stream, _This) {
         else {
             // Probably call held
         }
-        This.o_mgr.set_stream_local(o_stream);        
+        This.o_mgr.set_stream_local(o_stream);
 
         var b_answer = ((This.b_sdp_ro_pending || This.b_sdp_ro_offer) && (This.o_sdp_ro != null));
         if (b_answer) {
@@ -622,7 +625,7 @@ tmedia_session_jsep01.onGetUserMediaSuccess = function (o_stream, _This) {
                 tmedia_session_jsep01.mozThis ? tmedia_session_jsep01.onCreateSdpError : function(s_error){ tmedia_session_jsep01.onCreateSdpError(s_error, This); },
                 This.o_media_constraints,
                 false // createProvisionalAnswer
-             );
+            );
         }
         else {
             tsk_utils_log_info("createOffer");
